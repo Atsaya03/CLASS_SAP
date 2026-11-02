@@ -1,1 +1,3 @@
+REPORT ZTRG_TEST.
 
+INCLUDE ZTRG_TEST_CLASS_DEF.     "Class Definition
