@@ -1,3 +1,28 @@
 REPORT ZTRG_TEST.
 
 INCLUDE ZTRG_TEST_CLASS_DEF.     "Class Definition
+
+*&---------------------------------------------------------------------*
+*& Include          ZTRG_TEST_CLASS_DEF
+*&---------------------------------------------------------------------*
+
+CLASS ZTRG_TEST DEFINITION.
+  PUBLIC SECTION.
+  DATA: lt_mara TYPE TABLE OF mara,
+        ls_mara TYPE mara,
+        lt_makt TYPE TABLE OF makt,
+        ls_makt TYPE makt.
+
+  METHODS: GET_DATA.
+ENDCLASS.
+
+CLASS ZTRG_TEST IMPLEMENTATION.
+  METHOD: GET_DATA.
+    SELECT MATNR BRGEW NTGEW GEWEI SATNR
+      FROM MARA
+      INTO CORRESPONDING FIELDS OF TABLE lt_mara
+      WHERE MTART = 'ZPRV' OR
+            MTART = 'ZPFC' OR
+            MTART = 'ZSTG'.
+  ENDMETHOD.
+ENDCLASS.
