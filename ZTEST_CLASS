@@ -1,28 +1,54 @@
-REPORT ZTRG_TEST.
+REPORT ztrg_test.
 
-INCLUDE ZTRG_TEST_CLASS_DEF.     "Class Definition
+INCLUDE ztrg_test_class_def.     "Class Definition
 
+DATA: lo_obj TYPE REF TO ztrg_test.
+
+START-OF-SELECTION.
+
+CREATE OBJECT lo_obj
+  EXPORTING
+    lv_mtart1 = 'ZPFC'
+    lv_mtart2 = 'ZSTG'
+    lv_mtart3 = 'ZPFC'.
+
+lo_obj->get_data( ).
+
+**
 *&---------------------------------------------------------------------*
 *& Include          ZTRG_TEST_CLASS_DEF
 *&---------------------------------------------------------------------*
 
-CLASS ZTRG_TEST DEFINITION.
+CLASS ztrg_test DEFINITION.
   PUBLIC SECTION.
-  DATA: lt_mara TYPE TABLE OF mara,
-        ls_mara TYPE mara,
-        lt_makt TYPE TABLE OF makt,
-        ls_makt TYPE makt.
+    DATA: lt_mara TYPE TABLE OF mara,
+          ls_mara TYPE mara,
+          lt_makt TYPE TABLE OF makt,
+          ls_makt TYPE makt.
 
-  METHODS: GET_DATA.
+    DATA: gv_mtart1 TYPE mtart,
+          gv_mtart2 TYPE mtart,
+          gv_mtart3 TYPE mtart.
+
+    METHODS: get_data.
+    METHODS: constructor IMPORTING lv_mtart1 TYPE mtart "VALUE 'ZPRV',
+                                   lv_mtart2 TYPE mtart "VALUE 'ZPFC',
+                                   lv_mtart3 TYPE mtart. "VALUE 'ZSTG'.
+*
 ENDCLASS.
+CLASS ztrg_test IMPLEMENTATION.
 
-CLASS ZTRG_TEST IMPLEMENTATION.
-  METHOD: GET_DATA.
-    SELECT MATNR BRGEW NTGEW GEWEI SATNR
-      FROM MARA
+  METHOD:constructor.
+    gv_mtart1 = lv_mtart1.
+    gv_mtart2 = lv_mtart2.
+    gv_mtart3 = lv_mtart3.
+  ENDMETHOD.
+  METHOD: get_data.
+    SELECT matnr brgew ntgew gewei satnr
+      FROM mara
       INTO CORRESPONDING FIELDS OF TABLE lt_mara
-      WHERE MTART = 'ZPRV' OR
-            MTART = 'ZPFC' OR
-            MTART = 'ZSTG'.
+      WHERE mtart = gv_mtart1 OR
+            mtart = gv_mtart2 OR
+            mtart = gv_mtart3.
   ENDMETHOD.
 ENDCLASS.
